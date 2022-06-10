@@ -45,7 +45,7 @@ RUN ls -l /opt/app-root/etc
 RUN ls -l /etc/httpd
 RUN php -v
 RUN yum list installed *php*
-#RUN yum list installed unixODBC*
+RUN yum list installed unixODBC*
 #RUN yum list installed msodbcsql*
 
 # Modifica los archivos de configuracion de apache
