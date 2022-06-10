@@ -24,15 +24,15 @@ RUN pecl install imagick
 RUN yum -y install ca-certificates.noarch
 
 # Instala SQLServer driver
-RUN curl https://packages.microsoft.com/config/rhel/7/prod.repo --insecure > /etc/yum.repos.d/mssql-release.repo
-RUN ACCEPT_EULA=Y yum -y install msodbcsql17
-RUN ACCEPT_EULA=Y yum -y install unixODBC-devel
-RUN pecl install sqlsrv
-RUN pecl install pdo_sqlsrv
-RUN echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
-RUN echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini
+#RUN curl https://packages.microsoft.com/config/rhel/7/prod.repo --insecure > /etc/yum.repos.d/mssql-release.repo
+#RUN ACCEPT_EULA=Y yum -y install msodbcsql17
+#RUN ACCEPT_EULA=Y yum -y install unixODBC-devel
+#RUN pecl install sqlsrv
+#RUN pecl install pdo_sqlsrv
+#RUN echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
+#RUN echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+#COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
 COPY ./s2i/bin/ /usr/libexec/s2i
@@ -45,8 +45,8 @@ RUN ls -l /opt/app-root/etc
 RUN ls -l /etc/httpd
 RUN php -v
 RUN yum list installed *php*
-RUN yum list installed unixODBC*
-RUN yum list installed msodbcsql*
+#RUN yum list installed unixODBC*
+#RUN yum list installed msodbcsql*
 
 # Modifica los archivos de configuracion de apache
 RUN sed -i -f /opt/app-root/etc/httpdconf.sed /etc/httpd/conf/httpd.conf
