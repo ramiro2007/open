@@ -32,7 +32,7 @@ RUN yum -y install ca-certificates.noarch
 #RUN echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
 #RUN echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini
 
-#COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
 COPY ./s2i/bin/ /usr/libexec/s2i
@@ -45,7 +45,7 @@ RUN ls -l /opt/app-root/etc
 RUN ls -l /etc/httpd
 RUN php -v
 RUN yum list installed *php*
-RUN yum list installed unixODBC*
+#RUN yum list installed unixODBC*
 #RUN yum list installed msodbcsql*
 
 # Modifica los archivos de configuracion de apache
