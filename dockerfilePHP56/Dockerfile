@@ -17,36 +17,24 @@ RUN yum --enablerepo=remi-php56 install -y php-xml php-soap php-xmlrpc php-mbstr
                     php-ast php-bcmath php-cli php-common php-dba php-gd php-intl php-json php-mbstring \
                     php-mcrypt php-mysqlnd php-opcache php-pdo php-pear php-pecl-igbinary \
                     php-pecl-memcache php-pecl-mongodb php-pecl-redis php-pecl-scrypt php-pecl-uuid php-pecl-xdebug \
-                    php-pgsql php-odbc.x86_64 php-ldap ImageMagick ImageMagick-devel
-                    #php-sqlsrv php-pdo_sqlsrv autoconf automake php-devel.x86_64
+                    php-pgsql php-odbc.x86_64 php-ldap
 
-RUN pecl install imagick
 RUN yum -y install ca-certificates.noarch
-
-# Instala SQLServer driver
-#RUN curl https://packages.microsoft.com/config/rhel/7/prod.repo --insecure > /etc/yum.repos.d/mssql-release.repo
-#RUN ACCEPT_EULA=Y yum -y install msodbcsql17
-#RUN ACCEPT_EULA=Y yum -y install unixODBC-devel
-#RUN pecl install sqlsrv
-#RUN pecl install pdo_sqlsrv
-#RUN echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
-#RUN echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
 #COPY ./s2i/bin/ /usr/libexec/s2i
-COPY ./s2i/bin/ $STI_SCRIPTS_PATH
+COPY ./s2i/bin /usr/libexec/s2i
 # Copia Configuracion
-COPY ./contrib/ /opt/app-root
+#COPY ./contrib/ /opt/app-root
+COPY ./contrib /opt/app-root
 
 #Lista lo instalado
 RUN ls -l /opt/app-root/etc
 RUN ls -l /etc/httpd
 RUN php -v
 RUN yum list installed *php*
-#RUN yum list installed unixODBC*
-#RUN yum list installed msodbcsql*
 
 # Modifica los archivos de configuracion de apache
 RUN sed -i -f /opt/app-root/etc/httpdconf.sed /etc/httpd/conf/httpd.conf
