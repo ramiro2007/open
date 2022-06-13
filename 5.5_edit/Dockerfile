@@ -15,7 +15,7 @@ LABEL io.k8s.description="Platform for building and running PHP 5.5 applications
       io.openshift.tags="builder,php,php55"
 
 # Install Apache httpd and PHP
-RUN yum -y install httpd httpd-tools
+RUN yum -y install httpd
 RUN yum install -y centos-release-scl && \
     #INSTALL_PKGS="httpd24" && \
     #INSTALL_PKGS="httpd24 php55 php55-php php55-php-mysqlnd php55-php-pgsql php55-php-bcmath php55-php-devel \
