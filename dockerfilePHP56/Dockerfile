@@ -35,10 +35,10 @@ RUN yum -y install ca-certificates.noarch
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
-COPY ../s2i/bin/ /usr/libexec/s2i
-
+#COPY ./s2i/bin/ /usr/libexec/s2i
+COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 # Copia Configuracion
-COPY ../contrib/ /opt/app-root
+COPY ./contrib/ /opt/app-root
 
 #Lista lo instalado
 RUN ls -l /opt/app-root/etc
