@@ -5,6 +5,8 @@ ENV PHP_VERSION=5.6
 LABEL io.k8s.description="Platform for building and running PHP 5.6 applications" \
       io.k8s.display-name="Apache 2.4 with PHP 5.6" \
       io.openshift.expose-services="8080:http" \
+      io.openshift.s2i.scripts-url="image:///usr/libexec/s2i" \
+      io.s2i.scripts-url="image:///usr/libexec/s2i" \
       io.openshift.tags="builder,php,php56"
 
 
@@ -24,11 +26,10 @@ RUN yum -y install ca-certificates.noarch
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
-#COPY ./s2i/bin/ /usr/libexec/s2i
-COPY /s2i/bin /usr/libexec/s2i
+COPY ./s2i/bin/ /usr/libexec/s2i
+
 # Copia Configuracion
-#COPY ./contrib/ /opt/app-root
-COPY /contrib /opt/app-root
+COPY ./contrib/ /opt/app-root
 
 #Lista lo instalado
 RUN ls -l /opt/app-root/etc
