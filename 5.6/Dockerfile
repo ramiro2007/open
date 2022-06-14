@@ -1,18 +1,41 @@
-FROM openshift/base-centos7
+FROM centos/s2i-base-centos7
 
 # This image provides an Apache+PHP environment for running PHP
 # applications.
 
-
 EXPOSE 8080
+EXPOSE 8443
+
+# Description
+# This image provides an Apache 2.4 + PHP 5.6 environment for running PHP applications.
+# Exposed ports:
+# * 8080 - alternative port for http
 
 ENV PHP_VERSION=5.6 \
-    PATH=$PATH:/opt/rh/php55/root/usr/bin
+    PHP_VER_SHORT=56 \
+    NAME=php \
+    PATH=$PATH:/opt/rh/rh-php56/root/usr/bin
 
-LABEL io.k8s.description="Platform for building and running PHP 5.5 applications" \
-      io.k8s.display-name="Apache 2.4 with PHP 5.6" \
+ENV SUMMARY="Platform for building and running PHP $PHP_VERSION applications" \
+    DESCRIPTION="PHP $PHP_VERSION available as container is a base platform for \
+building and running various PHP $PHP_VERSION applications and frameworks. \
+PHP is an HTML-embedded scripting language. PHP attempts to make it easy for developers \
+to write dynamically generated web pages. PHP also offers built-in database integration \
+for several commercial and non-commercial database management systems, so writing \
+a database-enabled webpage with PHP is fairly simple. The most common use of PHP coding \
+is probably as a replacement for CGI scripts."
+
+LABEL summary="${SUMMARY}" \
+      description="${DESCRIPTION}" \
+      io.k8s.description="${DESCRIPTION}" \
+      io.k8s.display-name="Apache 2.4 with PHP ${PHP_VERSION}" \
       io.openshift.expose-services="8080:http" \
-      io.openshift.tags="builder,php,php56"
+      io.openshift.tags="builder,${NAME},${NAME}${PHP_VER_SHORT},rh-${NAME}${PHP_VER_SHORT}" \
+      io.openshift.s2i.scripts-url="image:///usr/libexec/s2i" \
+      io.s2i.scripts-url="image:///usr/libexec/s2i" \
+      name="centos/${NAME}-${PHP_VER_SHORT}-centos7" \
+      com.redhat.component="rh-${NAME}${PHP_VER_SHORT}-docker" \
+      version="${PHP_VERSION}"
 
 # Instala Apache
 RUN yum -y install httpd httpd-tools
@@ -25,25 +48,28 @@ RUN yum --enablerepo=remi-php56 install -y php-xml php-soap php-xmlrpc php-mbstr
                     php-pecl-memcache php-pgsql php-ldap
 RUN yum -y clean all --enablerepo='*'
 
+ENV PHP_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/php/ \
+    APP_DATA=${APP_ROOT}/src \
+    PHP_DEFAULT_INCLUDE_PATH=/opt/rh/rh-php56/root/usr/share/pear \
+    PHP_SYSCONF_PATH=/etc/opt/rh/rh-php56 \
+    PHP_HTTPD_CONF_FILE=rh-php56-php.conf \
+    HTTPD_CONFIGURATION_PATH=${APP_ROOT}/etc/conf.d \
+    HTTPD_MAIN_CONF_PATH=/etc/httpd/conf \
+    HTTPD_MAIN_CONF_D_PATH=/etc/httpd/conf.d \
+    HTTPD_VAR_RUN=/var/run/httpd \
+    HTTPD_DATA_PATH=/var/www \
+    HTTPD_DATA_ORIG_PATH=/opt/rh/httpd24/root/var/www \
+    HTTPD_VAR_PATH=/opt/rh/httpd24/root/var \
+    SCL_ENABLED=rh-php56
+
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
 # Copy extra files to the image.
 COPY ./root/ /
 
-# In order to drop the root user, we have to make some directories world
-# writeable as OpenShift default security model is to run the container under
-# random UID.
-RUN sed -i -f /opt/app-root/etc/httpdconf.sed /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
-    sed -i '/php_value session.save_path/d' /opt/rh/httpd24/root/etc/httpd/conf.d/php55-php.conf && \
-    echo "IncludeOptional /opt/app-root/etc/conf.d/*.conf" >> /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
-    head -n151 /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf | tail -n1 | grep "AllowOverride All" || exit && \
-    mkdir /tmp/sessions && \
-    chown -R 1001:0 /opt/app-root /tmp/sessions && \
-    chmod -R a+rwx /tmp/sessions && \
-    chmod -R ug+rwx /opt/app-root && \
-    chmod -R a+rwx /opt/rh/php55/root/etc && \
-    chmod -R a+rwx /opt/rh/httpd24/root/var/run/httpd
+# Reset permissions of filesystem to default values
+RUN /usr/libexec/container-setup && rpm-file-permissions
 
 USER 1001
 
