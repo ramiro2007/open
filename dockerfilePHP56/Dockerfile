@@ -16,31 +16,10 @@ LABEL io.k8s.description="Platform for building and running PHP 5.6 applications
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
-COPY ./s2i/bin/ $STI_SCRIPTS_PATH
+COPY ./s2i/bin/ /usr/libexec/s2i
 
 # Copia Configuracion
 COPY ./contrib/ /opt/app-root
-
-#Lista lo instalado
-#RUN ls -l /opt/app-root/etc
-#RUN ls -l /etc/httpd
-#RUN php -v
-#RUN yum list installed *php*
-
-# Modifica los archivos de configuracion de apache
-RUN sed -i -f /opt/app-root/etc/httpdconf.sed /etc/httpd/conf/httpd.conf
-RUN echo "IncludeOptional /opt/app-root/etc/conf.d/*.conf" >> /etc/httpd/conf/httpd.conf
-RUN head -n151 /etc/httpd/conf/httpd.conf | tail -n1 | grep "AllowOverride All" || exit
-RUN sed -i '/php_value session.save_path/d' /etc/httpd/conf.d/php.conf
-
-# Cambio de usuario y permisos
-RUN chown -R 1001:0 $STI_SCRIPTS_PATH
-RUN chmod +x $STI_SCRIPTS_PATH/assemble
-RUN chmod +x $STI_SCRIPTS_PATH/usage
-RUN chmod +x $STI_SCRIPTS_PATH/run
-
-RUN mkdir /tmp/sessions
-RUN touch /etc/php.ini
 
 RUN chown -R 1001:0 /opt/app-root /tmp/sessions
 RUN chown -R 1001:0 /etc/php.d
@@ -66,4 +45,4 @@ USER 1001
 
 EXPOSE 8080
 
-CMD $STI_SCRIPTS_PATH/run
+CMD /usr/libexec/s2i/run
