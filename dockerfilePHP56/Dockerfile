@@ -11,8 +11,8 @@ LABEL io.k8s.description="Platform for building and running PHP 5.6 applications
 
 
 # Instala Apache
-RUN yum -y install httpd httpd-tools
-RUN yum -y install ca-certificates.noarch
+#RUN yum -y install httpd httpd-tools
+#RUN yum -y install ca-certificates.noarch
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
@@ -22,10 +22,10 @@ COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 COPY ./contrib/ /opt/app-root
 
 #Lista lo instalado
-RUN ls -l /opt/app-root/etc
-RUN ls -l /etc/httpd
-RUN php -v
-RUN yum list installed *php*
+#RUN ls -l /opt/app-root/etc
+#RUN ls -l /etc/httpd
+#RUN php -v
+#RUN yum list installed *php*
 
 # Modifica los archivos de configuracion de apache
 RUN sed -i -f /opt/app-root/etc/httpdconf.sed /etc/httpd/conf/httpd.conf
