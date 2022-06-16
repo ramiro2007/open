@@ -25,7 +25,7 @@ RUN yum -y install ca-certificates.noarch
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
-#COPY ./s2i/bin/ /usr/libexec/s2i
+COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
 # Copia Configuracion
 COPY ./contrib/ /opt/app-root
@@ -43,10 +43,10 @@ RUN head -n151 /etc/httpd/conf/httpd.conf | tail -n1 | grep "AllowOverride All" 
 RUN sed -i '/php_value session.save_path/d' /etc/httpd/conf.d/php.conf
 
 # Cambio de usuario y permisos
-#RUN chown -R 1001:0 /usr/libexec/s2i
-#RUN chmod +x /usr/libexec/s2i/assemble
-#RUN chmod +x /usr/libexec/s2i/usage
-#RUN chmod +x /usr/libexec/s2i/run
+RUN chown -R 1001:0 $STI_SCRIPTS_PATH
+RUN chmod +x $STI_SCRIPTS_PATH/assemble
+RUN chmod +x $STI_SCRIPTS_PATH/usage
+RUN chmod +x $STI_SCRIPTS_PATH/run
 
 RUN mkdir /tmp/sessions
 RUN touch /etc/php.ini
@@ -77,4 +77,4 @@ EXPOSE 8080
 
 #RUN /usr/libexec/s2i/assemble
 
-#CMD /usr/libexec/s2i/run
+CMD $STI_SCRIPTS_PATH/run
