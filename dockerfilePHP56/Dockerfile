@@ -1,5 +1,5 @@
-FROM openshift/base-centos7
-
+#FROM openshift/base-centos7
+FROM centos/s2i-base-centos7
 ENV PHP_VERSION=5.6
 
 LABEL io.k8s.description="Platform for building and running PHP 5.6 applications" \
@@ -22,7 +22,6 @@ RUN yum --enablerepo=remi-php56 install -y php-xml php-soap php-xmlrpc php-mbstr
                     php-pgsql php-odbc.x86_64 php-ldap
 
 RUN yum -y install ca-certificates.noarch
-RUN yum -y install source-to-image
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
