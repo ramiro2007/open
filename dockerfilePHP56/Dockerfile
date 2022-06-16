@@ -22,7 +22,7 @@ RUN yum --enablerepo=remi-php56 install -y php-xml php-soap php-xmlrpc php-mbstr
                     php-pgsql php-odbc.x86_64 php-ldap
 
 RUN yum -y install ca-certificates.noarch
-
+RUN yum -y install source-to-image
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
