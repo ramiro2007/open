@@ -1,5 +1,5 @@
 #FROM openshift/base-centos7
-FROM centos/s2i-base-centos7
+FROM openshift/php-56-centos7
 ENV PHP_VERSION=5.6
 
 LABEL io.k8s.description="Platform for building and running PHP 5.6 applications" \
@@ -12,15 +12,6 @@ LABEL io.k8s.description="Platform for building and running PHP 5.6 applications
 
 # Instala Apache
 RUN yum -y install httpd httpd-tools
-RUN yum install -y epel-release http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-
-# Instala php
-RUN yum --enablerepo=remi-php56 install -y php-xml php-soap php-xmlrpc php-mbstring php-json php-gd php-mcrypt php php-devel \
-                    php-ast php-bcmath php-cli php-common php-dba php-gd php-intl php-json php-mbstring \
-                    php-mcrypt php-mysqlnd php-opcache php-pdo php-pear php-pecl-igbinary \
-                    php-pecl-memcache php-pecl-mongodb php-pecl-redis php-pecl-scrypt php-pecl-uuid php-pecl-xdebug \
-                    php-pgsql php-odbc.x86_64 php-ldap
-
 RUN yum -y install ca-certificates.noarch
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -74,7 +65,5 @@ RUN chmod -R 775 /storage/logs
 USER 1001
 
 EXPOSE 8080
-
-#RUN /usr/libexec/s2i/assemble
 
 CMD $STI_SCRIPTS_PATH/run
