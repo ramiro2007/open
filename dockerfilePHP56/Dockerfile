@@ -76,7 +76,7 @@ RUN chmod -R a+rwx /var/run/httpd
 COPY . /opt/app-root/src
 
 WORKDIR /opt/app-root/src
-RUN php /usr/local/bin/composer install --no-dev --no-interaction -o
+#RUN php /usr/local/bin/composer install --no-dev --no-interaction -o
 RUN mkdir /storage
 RUN mkdir /storage/logs
 RUN chown -R 1001:0 /storage/logs
