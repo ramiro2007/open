@@ -31,7 +31,7 @@ RUN mkdir -p /var/run/apache2 && chmod 777 -R /var/run/apache2 &&\
 # https://github.com/sclorg/s2i-php-container/
 # https://github.com/openshift-qe/ssh-git-docker/blob/master/ssh-git-openshift/Dockerfile
 
-COPY docker-php-entrypoint /usr/local/bin/
+COPY resources docker-php-entrypoint /usr/local/bin/
 RUN chmod 755 /usr/local/bin/docker-php-entrypoint &&\
   chmod 664 /etc/passwd &&\
   mkdir -p /home/openshift &&\
