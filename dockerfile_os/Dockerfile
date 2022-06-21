@@ -35,10 +35,10 @@ RUN echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini file
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
-COPY ./s2i/bin/ /usr/libexec/s2i
+COPY ./dockerfile_os/s2i/bin/ /usr/libexec/s2i
 
 # Copia Configuracion
-COPY ./contrib/ /opt/app-root
+COPY ./dockerfile_os/contrib/ /opt/app-root
 
 #Lista lo instalado
 RUN ls -l /opt/app-root/etc
