@@ -32,7 +32,7 @@ RUN yum --enablerepo=remi-php56 install -y php-xml php-soap php-xmlrpc php-mbstr
 #RUN echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
 #RUN echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:2.2  /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
 COPY ./dockerfilePHP56/s2i/bin/ /usr/libexec/s2i
