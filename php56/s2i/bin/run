@@ -41,13 +41,6 @@ else
   echo "-> Cgroups memory limit is set, using HTTPD_MAX_REQUEST_WORKERS=${HTTPD_MAX_REQUEST_WORKERS}"
 fi
 
-envsubst < /opt/app-root/etc/php.ini.template > $PHPRC
 
-for template in /opt/app-root/etc/php.d/*.template; do
-    envsubst < ${template} > $PHP_INI_SCAN_DIR/$(basename ${template} .template)
-done
-for template in /opt/app-root/etc/conf.d/*.template; do
-    envsubst < ${template} > /opt/app-root/etc/conf.d/$(basename ${template} .template)
-done
 
 exec httpd -D FOREGROUND
