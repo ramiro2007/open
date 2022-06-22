@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export_vars=$(cgroup-limits); export $export_vars
-export DOCUMENTROOT=${DOCUMENTROOT:-/app}
+export DOCUMENTROOT=${DOCUMENTROOT:-/php56/app}
 
 # Default php.ini configuration values, all taken
 # from php defaults.
