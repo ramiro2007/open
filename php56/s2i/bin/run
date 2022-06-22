@@ -43,4 +43,4 @@ fi
 
 
 
-exec httpd -D FOREGROUND
+#exec httpd -D FOREGROUND
