@@ -7,14 +7,14 @@ LABEL io.k8s.description="Platform for building and running PHP 5.6 applications
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,php,php56"
 
-COPY --from=composer:2.2  /usr/bin/composer /usr/local/bin/composer
+#COPY --from=composer:2.2  /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
 COPY ./php56/s2i/bin/ /usr/libexec/s2i
 
 # Copia Configuracion
 COPY ./php56/contrib/ /opt/app-root
-RUN ls -l /
+RUN ls -l /usr/local/etc
 
 # Modifica los archivos de configuracion de apache
 RUN sed -i -f /opt/app-root/etc/httpdconf.sed /etc/apache2/conf/httpd.conf
