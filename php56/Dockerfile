@@ -14,7 +14,7 @@ COPY ./php56/s2i/bin/ /usr/libexec/s2i
 
 # Copia Configuracion
 COPY ./php56/contrib/ /opt/app-root
-RUN ls -l /etc
+RUN ls -l /etc/apache2
 
 # Modifica los archivos de configuracion de apache
 RUN sed -i -f /opt/app-root/etc/httpdconf.sed /etc/apache2/conf/httpd.conf
