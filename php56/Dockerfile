@@ -17,10 +17,10 @@ COPY ./php56/contrib/ /opt/app-root
 
 
 # Modifica los archivos de configuracion de apache
-RUN sed -i -f /opt/app-root/etc/httpdconf.sed /etc/httpd/conf/httpd.conf
-RUN echo "IncludeOptional /opt/app-root/etc/conf.d/*.conf" >> /etc/httpd/conf/httpd.conf
-RUN head -n151 /etc/httpd/conf/httpd.conf | tail -n1 | grep "AllowOverride All" || exit
-RUN sed -i '/php_value session.save_path/d' /etc/httpd/conf.d/php.conf
+RUN sed -i -f /opt/app-root/etc/httpdconf.sed /etc/apache/conf/httpd.conf
+RUN echo "IncludeOptional /opt/app-root/etc/conf.d/*.conf" >> /etc/apache/conf/httpd.conf
+RUN head -n151 /etc/apache/conf/httpd.conf | tail -n1 | grep "AllowOverride All" || exit
+RUN sed -i '/php_value session.save_path/d' /etc/apache/conf.d/php.conf
 
 # Cambio de usuario y permisos
 RUN chown -R 1001:0 /usr/libexec/s2i
