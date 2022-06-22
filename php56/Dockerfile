@@ -1,4 +1,4 @@
-FROM openshift/base-centos7
+FROM php:5.4.45-apache
 
 ENV PHP_VERSION=5.6
 
@@ -7,29 +7,14 @@ LABEL io.k8s.description="Platform for building and running PHP 5.6 applications
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,php,php56"
 
-
-# Instala Apache
-RUN yum -y install httpd httpd-tools
-RUN yum install -y epel-release http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-
-# Instala php
-RUN yum --enablerepo=remi-php56 install -y php-xml php-soap php-xmlrpc php-mbstring php-json php-gd php-mcrypt php php-devel \
-                    php-ast php-bcmath php-cli php-common php-dba php-gd php-intl php-json php-mbstring \
-                    php-mcrypt php-mysqlnd php-opcache php-pdo php-pear php-pecl-igbinary \
-                    php-pecl-memcache php-pecl-mongodb php-pecl-redis php-pecl-scrypt php-pecl-uuid php-pecl-xdebug \
-                    php-pgsql php-odbc.x86_64 php-ldap
-
 COPY --from=composer:2.2  /usr/bin/composer /usr/local/bin/composer
 
 # Copia S2I
-COPY ./dockerfilePHP56/s2i/bin/ /usr/libexec/s2i
+COPY ./php56/s2i/bin/ /usr/libexec/s2i
 
 # Copia Configuracion
-COPY ./dockerfilePHP56/contrib/ /opt/app-root
+COPY ./php56/contrib/ /opt/app-root
 
-#Lista lo instalado
-RUN php -v
-RUN yum list installed *php*
 
 # Modifica los archivos de configuracion de apache
 RUN sed -i -f /opt/app-root/etc/httpdconf.sed /etc/httpd/conf/httpd.conf
