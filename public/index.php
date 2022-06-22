@@ -1,3 +1,3 @@
-<?php phpinfo();
+<?php //phpinfo();
 echo '<br>';
-echo 'Root';
+echo 'Public';
