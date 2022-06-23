@@ -1,8 +1,7 @@
-FROM php:5.4.45-apache
+FROM php:5.6.9-apache
+USER root
+COPY /php56/config /etc/apache2
+COPY /php56/public /var/www/html
 
-COPY /php56/public /var/www/html/
-
-RUN ls /etc/apache2
-
-EXPOSE 8080/tcp
+EXPOSE 8080
 
