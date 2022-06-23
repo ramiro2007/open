@@ -5,4 +5,4 @@ USER root
 COPY /config /etc/apache2
 COPY /src /var/www/html
 
-EXPOSE 80
+EXPOSE 8080
